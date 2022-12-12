@@ -197,9 +197,9 @@ router.post("/order-affiliate", async function (req, res) {
           const walletAmount = (
             parseFloat(req.body.total - req.body.shipping_total) * 0.05
           ).toFixed(2);
-          affiliateData.unpaid_earnings += parseFloat(walletAmount);
+          affiliateData.unpaid_earnings += parseFloat(walletAmount).toFixed(2);;
           const earData = {
-            user_name: data.user_name,
+            user_name: data.username,
             order_id: req.body.id,
             order_total: parseFloat(req.body.total),
             commission_amount: parseFloat(walletAmount),
@@ -220,9 +220,9 @@ router.post("/order-affiliate", async function (req, res) {
           ).toFixed(2);
 
           affiliateData.unpaid_earnings =
-            affiliateData.unpaid_earnings - parseFloat(walletAmount);
+            (affiliateData.unpaid_earnings - parseFloat(walletAmount)).toFixed(2);;
           affiliateData.paid_earnings =
-            affiliateData.paid_earnings + parseFloat(walletAmount);
+            (affiliateData.paid_earnings + parseFloat(walletAmount)).toFixed(2);;
           affiliateData.wallet = affiliateData.paid_earnings;
 
           await affiliateData.save();
@@ -255,7 +255,7 @@ router.post("/order-affiliate", async function (req, res) {
           );
 
           affiliateData.paid_earnings =
-            affiliateData.paid_earnings - affOrder.commission_amount;
+            (affiliateData.paid_earnings - affOrder.commission_amount).toFixed(2);
           affiliateData.wallet = affiliateData.paid_earnings;
           await Affiliate.updateOne(
             {
