@@ -197,13 +197,14 @@ router.post("/order-affiliate", async function (req, res) {
           const walletAmount = (
             parseFloat(req.body.total - req.body.shipping_total) * 0.05
           ).toFixed(2);
-          affiliateData.unpaid_earnings += parseFloat(walletAmount).toFixed(2);;
+          affiliateData.unpaid_earnings += parseFloat(walletAmount).toFixed(2);
           const earData = {
             user_name: data.username,
             order_id: req.body.id,
             order_total: parseFloat(req.body.total),
             commission_amount: parseFloat(walletAmount),
             status: req.body.status,
+            reason: "",
           };
           affiliateData.earnings_by_referals.push(earData);
           await affiliateData.save();
@@ -219,10 +220,12 @@ router.post("/order-affiliate", async function (req, res) {
             parseFloat(req.body.total - req.body.shipping_total) * 0.05
           ).toFixed(2);
 
-          affiliateData.unpaid_earnings =
-            (affiliateData.unpaid_earnings - parseFloat(walletAmount)).toFixed(2);;
-          affiliateData.paid_earnings =
-            (affiliateData.paid_earnings + parseFloat(walletAmount)).toFixed(2);;
+          affiliateData.unpaid_earnings = (
+            affiliateData.unpaid_earnings - parseFloat(walletAmount)
+          ).toFixed(2);
+          affiliateData.paid_earnings = (
+            affiliateData.paid_earnings + parseFloat(walletAmount)
+          ).toFixed(2);
           affiliateData.wallet = affiliateData.paid_earnings;
 
           await affiliateData.save();
@@ -254,8 +257,9 @@ router.post("/order-affiliate", async function (req, res) {
             (e) => e.order_id == req.body.id
           );
 
-          affiliateData.paid_earnings =
-            (affiliateData.paid_earnings - affOrder.commission_amount).toFixed(2);
+          affiliateData.paid_earnings = (
+            affiliateData.paid_earnings - affOrder.commission_amount
+          ).toFixed(2);
           affiliateData.wallet = affiliateData.paid_earnings;
           await Affiliate.updateOne(
             {
@@ -267,6 +271,7 @@ router.post("/order-affiliate", async function (req, res) {
                 "earnings_by_referals.$.status": req.body.status,
                 "earnings_by_referals.$.commission_amount":
                   affiliateData.wallet,
+                "earnings_by_referals.$.reason":"user cancelled"
               },
             }
           );
