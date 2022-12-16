@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-var mongoURL='mongodb://localhost:27017/rulesengine'
+var mongoURL='mongodb://localhost:27017/affiliates'
 
 mongoose.connect(mongoURL,{useUnifiedTopology:true , useNewUrlParser:true});
 
